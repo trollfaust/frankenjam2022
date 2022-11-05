@@ -13,7 +13,23 @@ public class GroundDetection : MonoBehaviour
 
     private void Update()
     {
-        onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, groundLength, groundLayer) || Physics2D.Raycast(transform.position - colliderOffset, Vector2.down, groundLength, groundLayer);
+        RaycastHit2D hit1 = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, groundLength, groundLayer);
+        RaycastHit2D hit2 = Physics2D.Raycast(transform.position - colliderOffset, Vector2.down, groundLength, groundLayer);
+        onGround = hit1 || hit2;
+
+        if (onGround)
+        {
+            if (hit1)
+            {
+                transform.parent = hit1.transform;
+            } else if (hit2)
+            {
+                transform.parent = hit2.transform;
+            }
+        } else
+        {
+            transform.parent = null;
+        }
     }
 
     private void OnDrawGizmosSelected()
