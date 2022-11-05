@@ -7,6 +7,9 @@ using UnityEngine.Tilemaps;
 public class StartUp : MonoBehaviour
 {
     [SerializeField]
+    RenderTexture renderTexture;
+
+    [SerializeField]
     Material lightMaterial;
     [SerializeField]
     Material darkMaterial;
@@ -20,6 +23,8 @@ public class StartUp : MonoBehaviour
     {
         darkTilemap.material = darkMaterial;
         lightTilemap.material = lightMaterial;
+        renderTexture.width = Screen.width ;
+        renderTexture.height = Screen.height ;
     }
 
     // Update is called once per frame
