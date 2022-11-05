@@ -56,7 +56,26 @@ public class PlatformMovement : MonoBehaviour
 
         Vector2 dir = (Vector2)pathTransforms[index].position - rb.position;
 
-        rb.MovePosition(rb.position + (dir.normalized * speed / 100));
+        platform.transform.Translate(dir.normalized * speed / 100);
     }
 
+    private void OnDrawGizmos()
+    {
+        pathTransforms = new List<Transform>();
+        foreach (Transform pathPoint in path.GetComponentsInChildren<Transform>())
+        {
+            pathTransforms.Add(pathPoint);
+        }
+
+        for (int i = 0; i < pathTransforms.Count; i++)
+        {
+            if (i != pathTransforms.Count - 1)
+            {
+                Gizmos.DrawLine(pathTransforms[i].position, pathTransforms[i + 1].position);
+            } else if (isLoop)
+            {
+                Gizmos.DrawLine(pathTransforms[i].position, pathTransforms[0].position);
+            }
+        }
+    }
 }
