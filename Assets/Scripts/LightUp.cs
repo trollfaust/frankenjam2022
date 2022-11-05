@@ -20,6 +20,9 @@ public class LightUp : MonoBehaviour
     [SerializeField]
     float shrinkingSpeed = 2;
 
+    [SerializeField]
+    Animator animator;
+
     ExpansionState state = ExpansionState.Stay;
     // Start is called before the first frame update
     void Start()
@@ -38,10 +41,12 @@ public class LightUp : MonoBehaviour
             yield break;
 
         state = ExpansionState.Expand;
+        animator.SetBool("Active", true);
 
         yield return new WaitForSeconds(openForSeconds);
 
         state = ExpansionState.Shrink;
+        animator.SetBool("Active", false);
 
         yield break;
     }
