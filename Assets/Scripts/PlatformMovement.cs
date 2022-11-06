@@ -9,25 +9,23 @@ public class PlatformMovement : MonoBehaviour
     [SerializeField] GameObject platform;
     [SerializeField] float speed;
 
-    private Rigidbody2D rb;
     private List<Transform> pathTransforms = new List<Transform>();
     private int index;
     private bool isReturning;
 
     private void Awake()
     {
-        rb = platform.GetComponent<Rigidbody2D>();
         foreach (Transform pathPoint in path.GetComponentsInChildren<Transform>())
         {
             pathTransforms.Add(pathPoint);
         }
 
-        rb.position = pathTransforms[0].position;
+        platform.transform.position = pathTransforms[0].position;
     }
 
     private void FixedUpdate()
     {
-        if (Vector3.Distance(rb.position, pathTransforms[index].position) < 0.1f)
+        if (Vector3.Distance(platform.transform.position, pathTransforms[index].position) < 0.1f)
         {
             if (!isReturning)
             {
@@ -54,9 +52,30 @@ public class PlatformMovement : MonoBehaviour
             }
         }
 
-        Vector2 dir = (Vector2)pathTransforms[index].position - rb.position;
+        Vector2 dir = pathTransforms[index].position - platform.transform.position;
 
-        rb.MovePosition(rb.position + (dir.normalized * speed / 100));
+        platform.transform.Translate(dir.normalized * speed / 100);
     }
 
+    private void OnDrawGizmos()
+    {
+        if (path == null)
+            return;
+        pathTransforms = new List<Transform>();
+        foreach (Transform pathPoint in path.GetComponentsInChildren<Transform>())
+        {
+            pathTransforms.Add(pathPoint);
+        }
+
+        for (int i = 0; i < pathTransforms.Count; i++)
+        {
+            if (i != pathTransforms.Count - 1)
+            {
+                Gizmos.DrawLine(pathTransforms[i].position, pathTransforms[i + 1].position);
+            } else if (isLoop)
+            {
+                Gizmos.DrawLine(pathTransforms[i].position, pathTransforms[0].position);
+            }
+        }
+    }
 }
