@@ -17,6 +17,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] float maxDecelerationInAir = 40f;
     [SerializeField] float maxTurnSpeedOnGround = 80f;
     [SerializeField] float maxTurnSpeedInAir = 80f;
+    [SerializeField] float minYValueForTeleport = -50f;
 
     private Rigidbody2D rb;
     private GroundDetection groundDetection;
@@ -30,10 +31,13 @@ public class MovementController : MonoBehaviour
     private float directionX;
     private float maxSpeedChange;
 
+    private Vector3 startPos;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         groundDetection = GetComponent<GroundDetection>();
+        startPos = transform.position;
     }
 
     /// <summary>
@@ -57,6 +61,11 @@ public class MovementController : MonoBehaviour
         }
 
         desiredVelocity = new Vector2(directionX, 0f) * Mathf.Max(maxSpeed - friction, 0f);
+
+        if (transform.position.y < minYValueForTeleport)
+        {
+            transform.position = startPos;
+        }
     }
 
     private void FixedUpdate()
