@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+enum ExpansionState
+{
+    Stay, Expand, Shrink
+}
 
 public class LightUp : MonoBehaviour
 {
-    enum ExpansionState
-    {
-        Stay, Expand, Shrink
-    }
+
     [SerializeField]
     Transform target;
 
@@ -24,6 +25,7 @@ public class LightUp : MonoBehaviour
     Animator animator;
 
     ExpansionState state = ExpansionState.Stay;
+    float wasOpenFor = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,13 +42,9 @@ public class LightUp : MonoBehaviour
         if (other.gameObject.tag != "Player")
             yield break;
 
+        wasOpenFor = 0;
         state = ExpansionState.Expand;
         animator.SetBool("Active", true);
-
-        yield return new WaitForSeconds(openForSeconds);
-
-        state = ExpansionState.Shrink;
-        animator.SetBool("Active", false);
 
         yield break;
     }
@@ -55,17 +53,32 @@ public class LightUp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        wasOpenFor += Time.deltaTime;
         if(state == ExpansionState.Expand)
         {
             expansion += Time.deltaTime * expansionSpeed;
-            if (target.localScale.magnitude > maxSize)
+            if (expansion > maxSize)
+            {
+                expansion = maxSize;
                 state = ExpansionState.Stay;
+            }
         }
         if (state == ExpansionState.Shrink)
         {
             expansion -= Time.deltaTime * shrinkingSpeed;
             if (expansion < 1)
+            {
+                expansion = 1;
                 state = ExpansionState.Stay;
+            }
+        }
+        else
+        {
+            if(wasOpenFor>openForSeconds)
+            {
+                state = ExpansionState.Shrink;
+                animator.SetBool("Active", false);
+            }
         }
         
         target.localScale = new Vector3(1,1,0)* expansion;
