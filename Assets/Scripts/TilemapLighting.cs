@@ -12,6 +12,7 @@ public class TilemapLighting : MonoBehaviour
     Camera cam;
     [SerializeField] int radius;
     [SerializeField] AFFECTEDSTATE affectedState;
+    [SerializeField] LightingColor lightingColor;
 
     private Texture2D currentTexture;
 
@@ -44,17 +45,10 @@ public class TilemapLighting : MonoBehaviour
                 }
 
                 Vector3 pos = tilemap.CellToWorld(gridPos);
-                Vector3 screenPos = cam.WorldToScreenPoint(pos);
-                int xOff = Mathf.RoundToInt((screenPos.x / cam.pixelWidth) * lightTexture.width);
-                int yOff = Mathf.RoundToInt((screenPos.y / cam.pixelHeight) * lightTexture.height);
 
-                RenderTexture.active = lightTexture;
-                currentTexture.ReadPixels(new Rect(xOff, yOff, 1, 1), 0, 0);
-                currentTexture.Apply();
-
-                Color color = currentTexture.GetPixel(0, 0);
+                Color color = lightingColor.GetColorFromWordPos(pos);
                 //Debug.Log("r:" + color.r + " g:" + color.g + " b:" + color.b);
-                if (color.r >= 0.6f && color.g >= 0.6f && color.b >= 0.6f)
+                if (color.r >= 0.5f && color.g >= 0.5f && color.b >= 0.5f)
                 {
                     ChangeCollider(gridPos, true);
                 } else

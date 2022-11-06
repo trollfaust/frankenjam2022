@@ -68,11 +68,11 @@ public class MovementController : MonoBehaviour
             ChangeAnimation(Animations.Idle);
             isPressingKey = false;
         }
-        if(rb.velocity.y < 0.1f)
+        if(rb.velocity.y < 0.5f && !onGround)
         {
             ChangeAnimation(Animations.Falling);
         }
-        if (rb.velocity.y > 0.1f)
+        if (rb.velocity.y > 0.5f && !onGround)
         {
             ChangeAnimation(Animations.Jumping);
         }
