@@ -97,9 +97,9 @@ public class GhostMovement : MonoBehaviour
         if (state == ExpansionState.Shrink)
         {
             expansion -= Time.deltaTime * shrinkingSpeed;
-            if (expansion < 1)
+            if (expansion < 0)
             {
-                expansion = 1;
+                expansion = 0;
                 state = ExpansionState.Stay;
             }
         }
