@@ -8,8 +8,8 @@ public class TilemapLighting : MonoBehaviour
 {
     private Tilemap tilemap;
     [SerializeField] RenderTexture lightTexture;
-    [SerializeField] GameObject player;
-    [SerializeField] Camera cam;
+    GameObject player;
+    Camera cam;
     [SerializeField] int radius;
     [SerializeField] AFFECTEDSTATE affectedState;
 
@@ -17,6 +17,8 @@ public class TilemapLighting : MonoBehaviour
 
     private void Awake()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        cam = player.GetComponentInChildren<Camera>();
         tilemap = GetComponent<Tilemap>();
         currentTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false, true);
     }
