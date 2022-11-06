@@ -8,6 +8,7 @@ public class PlatformLighting : MonoBehaviour
     Camera cam;
     [SerializeField] AFFECTEDSTATE affectedState;
     [SerializeField] Collider2D colliderToChange;
+    [SerializeField] LightingColor lightingColor;
 
     private Texture2D currentTexture;
 
@@ -28,23 +29,8 @@ public class PlatformLighting : MonoBehaviour
 
         foreach (Vector3 pos in positions)
         {
-            Vector3 screenPos = cam.WorldToScreenPoint(pos);
-            if (screenPos.x < 0 || screenPos.x >= cam.pixelWidth || screenPos.y < 0 || screenPos.y >= cam.pixelHeight)
-            {
-                continue;
-            }
-            int xOff = Mathf.RoundToInt((screenPos.x / cam.pixelWidth) * lightTexture.width);
-            int yOff = Mathf.RoundToInt((screenPos.y / cam.pixelHeight) * lightTexture.height);
-            if (xOff < 0 || xOff >= lightTexture.width || yOff < 0 || yOff >= lightTexture.height)
-            {
-                continue;
-            }
+            Color color = lightingColor.GetColorFromWordPos(pos);
 
-            RenderTexture.active = lightTexture;
-            currentTexture.ReadPixels(new Rect(xOff, yOff, 1, 1), 0, 0);
-            currentTexture.Apply();
-
-            Color color = currentTexture.GetPixel(0, 0);
             if (color.r >= 0.5f && color.g >= 0.5f && color.b >= 0.5f)
             {
                 ChangeCollider(true);
