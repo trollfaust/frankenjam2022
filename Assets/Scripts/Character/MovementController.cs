@@ -18,6 +18,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] float maxTurnSpeedOnGround = 80f;
     [SerializeField] float maxTurnSpeedInAir = 80f;
     [SerializeField] float minYValueForTeleport = -50f;
+    [SerializeField] Animator animator;
 
     private Rigidbody2D rb;
     private GroundDetection groundDetection;
@@ -40,6 +41,12 @@ public class MovementController : MonoBehaviour
         startPos = transform.position;
     }
 
+    enum Animations { Idle,Walk,Falling,Jumping}
+    void ChangeAnimation(Animations animation)
+    {
+        animator.SetInteger("Mode", (int)animation);
+    }
+
     /// <summary>
     /// Call to move Character on Input. HorizontalMovmentValue from a Input (-1 to 1)
     /// </summary>
@@ -54,10 +61,20 @@ public class MovementController : MonoBehaviour
         if (directionX != 0)
         {
             transform.localScale = new Vector3(directionX > 0 ? 1 : -1, 1, 1);
+            ChangeAnimation(Animations.Walk);
             isPressingKey = true;
         } else
         {
+            ChangeAnimation(Animations.Idle);
             isPressingKey = false;
+        }
+        if(rb.velocity.y < 0)
+        {
+            ChangeAnimation(Animations.Falling);
+        }
+        if (rb.velocity.y > 0)
+        {
+            ChangeAnimation(Animations.Jumping);
         }
 
         desiredVelocity = new Vector2(directionX, 0f) * Mathf.Max(maxSpeed - friction, 0f);
