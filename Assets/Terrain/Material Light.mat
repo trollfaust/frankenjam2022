@@ -23,8 +23,7 @@ Material:
   m_Name: Material Light
   m_Shader: {fileID: 4800000, guid: 0002401ae6af0134b980d81fbdf0a36a, type: 3}
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _INVERTEDLIGHT_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -93,7 +92,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _InvertedLight: 1
+    - _InvertedLight: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
