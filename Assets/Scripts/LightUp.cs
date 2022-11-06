@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 enum ExpansionState
 {
     Stay, Expand, Shrink
@@ -20,6 +21,8 @@ public class LightUp : MonoBehaviour
     float expansionSpeed = 2;
     [SerializeField]
     float shrinkingSpeed = 2;
+    [SerializeField] bool isMenu = false;
+    [SerializeField] bool isGoal = false;
 
     [SerializeField]
     Animator animator;
@@ -29,7 +32,10 @@ public class LightUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (isMenu)
+        {
+            StartMenuAni();
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -44,7 +50,11 @@ public class LightUp : MonoBehaviour
 
         wasOpenFor = 0;
         state = ExpansionState.Expand;
-        animator.SetBool("Active", true);
+        if (!isGoal)
+        {
+            animator.SetBool("Active", true);
+
+        }
 
         yield break;
     }
@@ -61,6 +71,10 @@ public class LightUp : MonoBehaviour
             {
                 expansion = maxSize;
                 state = ExpansionState.Stay;
+                if (isGoal)
+                {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                }
             }
         }
         if (state == ExpansionState.Shrink)
@@ -77,10 +91,30 @@ public class LightUp : MonoBehaviour
             if(wasOpenFor>openForSeconds)
             {
                 state = ExpansionState.Shrink;
-                animator.SetBool("Active", false);
+                if (!isGoal)
+                {
+
+                    animator.SetBool("Active", false);
+                }
             }
         }
         
         target.localScale = new Vector3(1,1,0)* expansion;
+    }
+
+    void StartMenuAni()
+    {
+        StartCoroutine(MenuAni());
+    }
+
+    IEnumerator MenuAni()
+    {
+        yield return new WaitForSeconds(2);
+        target.localScale = new Vector3(20, 20, 20);
+        wasOpenFor = 0;
+        state = ExpansionState.Expand;
+        animator.SetBool("Active", true);
+        yield return new WaitForSeconds(10);
+        StartMenuAni();
     }
 }
