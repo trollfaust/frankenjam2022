@@ -24,6 +24,9 @@ public class LightUp : MonoBehaviour
     [SerializeField]
     Animator animator;
 
+    [SerializeField]
+    AudioSource activationAudio;
+
     ExpansionState state = ExpansionState.Stay;
     float wasOpenFor = 0;
     // Start is called before the first frame update
@@ -42,9 +45,14 @@ public class LightUp : MonoBehaviour
         if (other.gameObject.tag != "Player")
             yield break;
 
+        bool alreadyOpen = expansion != 1;
+
         wasOpenFor = 0;
         state = ExpansionState.Expand;
         animator.SetBool("Active", true);
+
+        if(!alreadyOpen)
+            activationAudio.Play();
 
         yield break;
     }
